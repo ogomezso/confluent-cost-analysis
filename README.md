@@ -108,6 +108,4 @@ python3 confluent_cost_analysis.py > output.csv
 ```
 
 However, using the shell script is recommended as it handles dependency installation and provides a better user experience.
-# confluent_cost_anlysis
-# confluent_cost_analysis
-# confluent_cost_analysis
+
