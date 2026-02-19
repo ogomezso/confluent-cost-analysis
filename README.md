@@ -1,6 +1,6 @@
 # Confluent Cloud Cost Analysis Tool
 
-This tool analyzes Kafka (LKC) consumption in Confluent Cloud over a specified period and generates a CSV report with network transfer data.
+This tool analyzes Kafka (LKC) consumption in Confluent Cloud over a specified period and generates a CSV report with network transfer and storage data.
 
 ## Quick Start
 
@@ -26,16 +26,15 @@ The script will:
 
 - **Analysis Period**: Analyzes the specified number of months **before** the reference date
 - **Default Behavior**: If no reference date is provided, analyzes the last month from today
-- **Output**: Generates a CSV with monthly network transfer data
+- **Output**: Generates a CSV with monthly network transfer and storage data
 
 ## Output CSV Columns
 
 - `Month`: Month in YYYY-MM format
-- `GB_Write`: Gigabytes written
-- `GB_Read`: Gigabytes read
-- `TB_Write`: Terabytes written
-- `TB_Read`: Terabytes read
-- `TB_Total`: Total terabytes transferred
+- `GB_Write`: Gigabytes written (network)
+- `GB_Read`: Gigabytes read (network)
+- `Storage_GB`: Gigabytes of Kafka storage used
+- `GB_Total`: Total gigabytes transferred (write + read)
 
 ## Usage Examples
 

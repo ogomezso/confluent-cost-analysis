@@ -142,6 +142,7 @@ while current < end_date:
 # ----------------------------
 gb_write = defaultdict(float)
 gb_read = defaultdict(float)
+storage_gb = defaultdict(float)
 
 for row in items:
     product = row.get("product")
@@ -155,7 +156,7 @@ for row in items:
         continue
     if resource_id != CLUSTER_ID:
         continue
-    if line_type not in ("KAFKA_NETWORK_WRITE", "KAFKA_NETWORK_READ"):
+    if line_type not in ("KAFKA_NETWORK_WRITE", "KAFKA_NETWORK_READ", "KAFKA_STORAGE"):
         continue
     if not start:
         continue
@@ -165,6 +166,8 @@ for row in items:
         gb_write[month] += float(quantity)
     elif line_type == "KAFKA_NETWORK_READ":
         gb_read[month] += float(quantity)
+    elif line_type == "KAFKA_STORAGE":
+        storage_gb[month] += float(quantity)
 
 # ----------------------------
 # CSV OUTPUT (for Excel)
@@ -176,15 +179,14 @@ print("Analysis complete! Generating CSV output...")
 output_filename = f"confluent_cost_analysis_{CLUSTER_ID}.csv"
 
 with open(output_filename, 'w') as f:
-    f.write("Month,GB_Write,GB_Read,TB_Write,TB_Read,TB_Total\n")
+    f.write("Month,GB_Write,GB_Read,Storage_GB,GB_Total\n")
     
-    all_months = sorted(set(gb_write.keys()) | set(gb_read.keys()))
+    all_months = sorted(set(gb_write.keys()) | set(gb_read.keys()) | set(storage_gb.keys()))
     for m in all_months:
         gw = gb_write.get(m, 0.0)
         gr = gb_read.get(m, 0.0)
-        tw = gw / 1024.0
-        tr = gr / 1024.0
-        tt = tw + tr
-        f.write(f"{m},{gw:.2f},{gr:.2f},{tw:.4f},{tr:.4f},{tt:.4f}\n")
+        sg = storage_gb.get(m, 0.0)
+        gt = gw + gr
+        f.write(f"{m},{gw:.2f},{gr:.2f},{sg:.2f},{gt:.2f}\n")
 
 print(f"CSV saved to: {output_filename}")
